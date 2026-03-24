@@ -1,0 +1,52 @@
+.pane {
+  display: flex;
+  flex-direction: column;
+  width: 225px;
+  flex-shrink: 0;
+  height: 100vh;
+  background-color: var(--color-surface);
+  overflow: hidden;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #2a2d3e;
+  margin: 0;
+}
+
+/* ── Icon Row (section 3) ───────────────────────────────────── */
+
+.iconSection {
+  margin-top: auto;
+}
+
+.iconRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 12px 16px;
+  gap: 4px;
+}
+
+.iconButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: none;
+  background: none;
+  color: #7b7f96;
+  cursor: pointer;
+}
+
+.iconButton:hover {
+  background-color: #252839;
+  color: #e2e4f0;
+}
+
+.iconButton svg {
+  width: 16px;
+  height: 16px;
+}

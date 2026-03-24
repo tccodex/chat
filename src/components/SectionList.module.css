@@ -1,0 +1,59 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 0;
+  scrollbar-width: thin;
+  scrollbar-color: #2a2d3e transparent;
+}
+
+.section::-webkit-scrollbar {
+  width: 4px;
+}
+
+.section::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.section::-webkit-scrollbar-thumb {
+  background-color: #2a2d3e;
+  border-radius: 99px;
+}
+
+.section:hover::-webkit-scrollbar-thumb {
+  background-color: #3d3f8f;
+}
+
+.section::-webkit-scrollbar-button {
+  display: none;
+}
+
+@keyframes bounceUp {
+  0%   { transform: translateY(0); }
+  35%  { transform: translateY(-8px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes bounceDown {
+  0%   { transform: translateY(0); }
+  35%  { transform: translateY(8px); }
+  100% { transform: translateY(0); }
+}
+
+.bounceTop {
+  animation: bounceUp 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.bounceBottom {
+  animation: bounceDown 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sectionLabel {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  color: #7b7f96;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0 16px 8px;
+}

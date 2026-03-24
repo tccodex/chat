@@ -1,0 +1,43 @@
+:root {
+  /* Colors — 3 theme colors */
+  --color-bg: #0f1117;
+  --color-surface: #1c1f2e;
+  --color-accent: #6366f1;
+
+  /* Font sizes — 3 sizes */
+  --text-sm: 12px;
+  --text-base: 14px;
+  --text-lg: 18px;
+
+  /* Font weights — 3 styles */
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-bold: 700;
+
+  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  font-size: var(--text-base);
+  font-weight: var(--weight-normal);
+  color: #e2e4f0;
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+}
+
+#root {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}

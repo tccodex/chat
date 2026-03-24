@@ -1,0 +1,41 @@
+.messageRow {
+  display: flex;
+  width: 100%;
+}
+
+.messageRow.incoming {
+  justify-content: flex-start;
+}
+
+.messageRow.outgoing {
+  justify-content: flex-end;
+}
+
+.bubble {
+  max-width: 60%;
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  font-size: var(--text-base);
+  font-weight: var(--weight-normal);
+  line-height: 1.5;
+  word-break: break-word;
+  color: var(--text-primary);
+}
+
+.bubble.incoming {
+  background-color: var(--incoming-bg);
+  border-bottom-left-radius: var(--radius-sm);
+}
+
+.bubble.outgoing {
+  background-color: var(--outgoing-bg);
+  border-bottom-right-radius: var(--radius-sm);
+}
+
+.timestamp {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-normal);
+  color: var(--text-muted);
+  margin-top: 4px;
+}
