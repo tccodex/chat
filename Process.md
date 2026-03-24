@@ -1,80 +1,5 @@
 # Process
 
-## Stack
-
-- React 19 + TypeScript + Vite
-- CSS Modules (`.module.css` per component)
-- No CSS framework — plain CSS custom properties for design tokens
-- `npm run dev` serves to localhost via Vite
-
----
-
-## Design Tokens
-
-Defined globally in `src/index.css` on `:root`. Everything in the component tree inherits them via `var(--token)`.
-
-**3 colors**
-- `--color-bg` — base dark background
-- `--color-surface` — elevated panels (sidepane, input area)
-- `--color-accent` — indigo, used for active states and badges
-
-**3 font sizes** — `--text-sm` (12px), `--text-base` (14px), `--text-lg` (18px)
-
-**3 font weights** — `--weight-normal` (400), `--weight-medium` (500), `--weight-bold` (700)
-
-Component-specific tokens (e.g. bubble colors, border colors) are scoped to the root class of the component that owns them, not `:root`. This prevents global namespace pollution while still cascading to children naturally through the DOM.
-
----
-
-## Component Architecture
-
-```
-App
-├── SidePane
-│   ├── SectionList (Channels)
-│   │   └── SectionItem × n
-│   └── SectionList (Direct Messages)
-│       └── SectionItem × n
-└── MessageContainer
-    └── MessageBubble × n
-```
-
-Each component has its own `.tsx` and `.module.css` file. No shared stylesheet between components.
-
----
-
-## Components
-
-### MessageBubble
-- Renders a single message bubble
-- Direction (`incoming` | `outgoing`) drives alignment and color via a typed `Record<MessageDirection, string>` — no dynamic string indexing
-- Exports `Message` and `MessageDirection` types — `MessageContainer` imports them from here
-
-### MessageContainer
-- Owns message state and input state
-- 80% / 20% flex split: message list above, input area below
-- `useEffect` + scroll anchor ref auto-scrolls to the latest message on send
-- Send is guarded: empty input is a no-op
-
-### SectionItem
-- Fully controlled — owns no state
-- Receives `isActive` and `onSelect` as props
-- Exports `LineItem` type
-
-### SectionList
-- Renders a labeled, scrollable list of `SectionItem`s
-- Owns the scroll bounce effect via `useScrollBounce` hook (wheel event listener + CSS keyframe animation)
-- Scrollbar styled to 4px, transparent track, accent color on hover, arrow ends removed
-- Exports `SectionId` and `ActiveKey` types
-
-### SidePane
-- Single source of truth for active selection: `activeKey: ActiveKey`
-- `ActiveKey` is a typed discriminated union `{ section: SectionId; id: number }` — not a magic string
-- Icon render functions stored as `() => React.ReactElement`, not eagerly-created `ReactNode`
-- Fixed width (`150px`), `flex-shrink: 0` — does not resize with the window
-
----
-
 ## Key Technical Decisions
 
 **Active state lifted to `SidePane`**
@@ -153,3 +78,54 @@ Behavior: none yet / <describe specific interactions>
 Constraints: <list non-negotiables>
 Stop after: <explicit boundary>
 ```
+
+
+### Chats
+
+The main efficiency gains come from three things:
+
+1. Lead with constraints, not features
+The prompts that moved fastest were the ones that front-loaded the non-negotiables:
+
+"Prefer flexbox. Rule of 3 for styling. 80/20 split. No interactivity yet."
+
+The ones that required iteration were open-ended:
+
+"Can we improve on this?"
+
+That's a valid prompt but it invites a conversation rather than a decision. Faster version:
+
+"The active state is local to SectionItem but needs to be shared across sections. Lift it to SidePane as a typed discriminated union. Also DRY the section rendering into a reusable sub-component."
+
+You've already done the diagnosis — just hand it over.
+
+2. Separate structure from behavior
+You instinctively did this ("don't focus on interactivity yet") and it was the right call. A more explicit version of this as a standing rule:
+
+Pass 1 — structure + layout only, static data, no handlers
+
+Pass 2 — interactivity wired up
+
+Pass 3 — refactor / split files
+
+You went through all three passes, just not always in clean separation. The bounce effect and active state got intermixed with structural work, which caused some back-and-forth.
+
+3. File splits should be their own prompt
+Yes — the "refactor into separate files" request should always be a standalone prompt, after the component is stable. Asking for a component and its file structure in the same prompt leads to over-scaffolding before the design is settled.
+
+What an efficient prompt sequence looks like
+
+1. "Scaffold the project shell. #root is full-viewport flex. Design tokens: 3 colors, 3 sizes, 3 weights."
+
+2. "Build MessageContainer. 80% scroll area, 20% input. Static mock data. No handlers. CSS Module."
+
+3. "Wire up the input: textarea accepts text, Send appends an outgoing message."
+
+4. "Build SidePane in isolation. Fixed 260px. 3 sections [describe each]. Static only."
+
+5. "Add active state to SidePane. Single active item across both sections."
+
+6. "Split SectionItem and SectionList into their own files and CSS modules."
+That's 6 prompts with no iteration needed on any of them. You got here in roughly double that because some prompts bundled multiple concerns or left decisions open.
+
+Short version: Be the architect in the prompt. Diagnose the problem, state the constraint, name the pattern. The more decisions you make before sending, the less back-and-forth there is.
